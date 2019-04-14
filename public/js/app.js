@@ -17,8 +17,8 @@ $(document).on("click", "p", function(){
     var thisId = $(this).attr("data-id");
     // make an ajax call for the articles with the get method and at the url route and the thisId
     $.ajax ({
-        method: GET,
-        url: "/articles/" + thisId
+        method: "GET",
+        url: "/article/" + thisId
         // return a promise with a function that has `data` as a callback
     })
     .then(function(data) {
@@ -26,11 +26,17 @@ $(document).on("click", "p", function(){
         // The title of the article
         $("#notes").append("<h2>" + data.title + "</h2>");
         // An input to enter a new title
-        $("#notes").append("<input id='titleinput' name='title' >");
+        $("#notes").append(
+          "<div class='form-group'><label for='notes-header'>Title:</label><input type='text' class='form-control' id='titleinput' name='title'></div>"
+        );
         // A textarea to add a new note body
-        $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
+        $("#notes").append(
+          "<div class='form-group'><label for='notes-section'>Notes:</label><textarea class='form-control' id='bodyinput' name='body' rows='3'></textarea></div>"
+        );
         // A button to submit a new note, with the id of the article saved to it
-        $("#notes").append("<button type='button' class='btn btn-primary' data-id='" + data._id + "' id='savenote'>Save Note</button>");
+        $("#notes").append(
+          "<button type='button' class='btn btn-primary' data-id='" + data._id + "' id='savenote'>Save Note</button>"
+        );
   
         // If there's a note in the article
         if (data.note) {

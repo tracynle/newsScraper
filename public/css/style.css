@@ -1,11 +1,6 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
 }
-
-
-#clear-btn {
-  float: right;
-}
 #wrapper {
   width: 960px;
   margin-left: auto;
