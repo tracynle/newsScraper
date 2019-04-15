@@ -79,3 +79,17 @@ $(document).on("click", "#savenote", function() {
     $("#bodyinput").val("");
   });
   
+
+// ===============
+$(document).on("click", "#clear-btn", function(){
+  $.ajax ({
+    method: "DELETE",
+    url: "/articles/"
+    // return a promise with a function that has `data` as a callback
+  })
+  .then(function(){
+    $("#articles").empty();
+    $("#notes").empty();
+    console.log("Everything is cleared");
+  })
+})

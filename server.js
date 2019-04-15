@@ -1,3 +1,4 @@
+require("dotenv").config();
 var express = require("express");
 var logger = require("morgan");
 var mongoose = require("mongoose");
@@ -26,7 +27,7 @@ app.use(express.static("public"));
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 
 mongoose.connect(MONGODB_URI);
-
+console.log("This is it: zzzzz "+ MONGODB_URI);
 // Routes
 
 // A GET route for scraping the page
@@ -38,18 +39,17 @@ app.get("/scrape", function(req, res){
         console.log("THIS IS THE RESPONSE: "+ response.data.substring(0, 50));
         // Then grab the html element where the article's tag is using the .each method 
         // that takes in function that include 2 parameters : `i` for iterate and element(refers to the current element from that iteration)
-        $("article p a").each(function(i, element) {
+        $("article div.teaser-info > a").each(function(i, element) {
             console.log("This is the Link's `i`:" + i);
             console.log("This is the Link's` element: " + element);
             // save it as an empty result object which you will use later to append on the page 
             var result = {};
             // add the text and href of every link, and save them as properties of the result object
             result.title = $(this)
-                // .children("a")
+                .children("h2")
                 .text();
             console.log("this is the result: " + result.title);
             result.link = $(this)
-                // .children("a")
                 .attr("href");
                 console.log("this is the link: " + result.link);
             // Create a new Article using the `result` object you created earlier from scraping
@@ -105,11 +105,11 @@ app.get("/article/:id", function(req,res){
 });
 // ========== //
 // Route to POST the Article's associate note and saves/updates it
-app.post("/article/:id", function(req, res){
+app.post("/articles/:id", function(req, res){
     // create a new collection titled `Note` to db and pass the req.body to the entry
     db.Note.create(req.body)
         // returns a promise with a callback name
-        .then(function(dbNote){
+    .then(function(dbNote){
         // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
         // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
         return db.Article.findOneAndUpdate({_id: req.params.id}, { note: dbNote._id},{ new: true});
@@ -117,14 +117,34 @@ app.post("/article/:id", function(req, res){
     })
     // if promise was successful, response is sent it back to the client  
     .then(function(dbArticle){
-            res.send(dbNote);
+        res.send(dbArticle);
 
-        })
-        // .catch, if an error occured, send the response back to the client in JSON format
-        .catch(function(err){
-            res.json(err);
-        });
+    })
+    // .catch, if an error occured, send the response back to the client in JSON format
+    .catch(function(err){
+        res.json(err);
+    });
 });
+// Route to DELETE one article by id
+app.delete("/article/:id", function(req, res){
+    db.Article.delete({ _id: req.params.id })
+    .then(function(dbArticle){
+        res.json(dbArticle)
+    })
+    .catch(function(err){
+        res.json(err);
+    });
+})
+// Route to DELETE ALL articles
+app.delete("/articles", function(req, res){
+    db.Article.remove()
+    .then(function(){
+       res.send(200);
+    })
+    .catch(function(err){
+        res.json(err);
+    }); 
+})
 // ========== //
 // Start the server that listens to the port and log it.
 app.listen(PORT, function() {
