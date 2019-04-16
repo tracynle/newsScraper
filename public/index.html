@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.0.0/materia/bootstrap.min.css"/>
-        <link href="https://fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Leckerli+One" rel="stylesheet">
 
         <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
     </head>
@@ -15,16 +15,22 @@
     <body>
         <div class="container">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-              <a class="navbar-brand" href="/">News Scraper</a>
-              <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a href="/" class="nav-link">Home</a>
-                </li>
-                <li class="nav-item active">
-                    <a href="/saved" class="nav-link">Saved Articles</a>
-                </li>
-                <li class="btn btn-danger clear" id="scrape-btn">Scrape New Articles</li>
-                <li class="btn btn-danger clear" id="clear-btn">Clear Articles</li>
+                <div class="container-btns">
+                    <ul class="navbar-nav">
+                        <li class="btn btn-danger clear" id="scrape-btn">Scrape New Articles</li>
+                        <li class="btn btn-danger clear" id="clear-btn">Clear Articles</li>
+                    </ul>
+                </div>
+                <div class="container-nav-links">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="/" class="nav-link">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a href="/saved" class="nav-link">Saved Articles</a>
+                        </li>
+                    </ul>
+                </div>
             </nav>
             <div class="jumbotron text-center" id="jumbotron-image">
                 <div class="overlay">
@@ -32,8 +38,8 @@
                 <div class="background-image">
                 </div>
                 <div class="caption">
-                    <h1>News Scraper</h1>
-                    <p>Art News Edition</p>
+                    <h1 id="jumbo-caption-h1">News Scraper</h1>
+                    <p id="jumbo-caption-p">Art News Edition</p>
                 </div>
             </div>
         </div>

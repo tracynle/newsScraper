@@ -8,7 +8,14 @@ function getArticles(){
           // display the article's id, title and link on the page
           $("#articles").append("<p data-id= '" + data[i]._id + "' >" + data[i].title + "<br /><a href='" + data[i].link + "'>" + data[i].link + "</a></p>");
       }
-  })
+  }) // get all articles 
+  $.ajax({
+   method: "GET",
+   url: "/articles/"
+ })
+ .then(function(data){
+   console.log("Articles are scraped");
+ })
 }
 // ============
 // When someone clicks on the p tag, the document will be ready when someone clicks on it. 
@@ -98,18 +105,16 @@ $(document).on("click", "#clear-btn", function(){
 })
 // ===============
 // Scrape new articles 
-$(document).on("click", "#scrape-btn", function(){
+$(document).on("click", "#scrape-btn", function(response){
   $.ajax({
     method: "GET",
-    url: "/scrape"
+    url: "/scrape/"
   })
-  $.ajax({
-    method: "GET",
-    url: "/articles"
-  })
-  .then(function(getArticles){
+  .then(function(response){
     console.log("New articles scraped");
+
   })
   getArticles();
+
 })
 
