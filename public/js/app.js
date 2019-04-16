@@ -11,7 +11,7 @@ function getArticles(){
   }) // get all articles 
   $.ajax({
    method: "GET",
-   url: "/articles/"
+   url: "/articles"
  })
  .then(function(data){
    console.log("Articles are scraped");
