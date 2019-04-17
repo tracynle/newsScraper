@@ -43,15 +43,30 @@ app.get("/scrape", function(req, res){
             // save it as an empty result object which you will use later to append on the page 
             var result = {};
             // add the text and href of every link, and save them as properties of the result object
-            result.title = $(this)
-                .children("h2")
-                .text();
-            result.link = $(this)
-                .attr("href");
-                // console.log("this is the link: " + result.link);
+            result.title = $(this).children("h2").text();
+            result.link = $(this).attr("href");
+            
+            // check for duplicates condition:
+            db.Article.find({title: result.title})
+
+            .then(function(dbArticles){
+                if (dbArticles.length === 0) {
+                    console.log("No duplicate articles!");
+                    createArticle();
+                }
+                else {
+                    console.log("Duplicate articles scraped :( ");
+                }         
+            })
+            .catch(function(err){
+                console.log(err);
+            });
+
             // Create a new Article using the `result` object you created earlier from scraping
             // Use mongoose db with collection name `Article` and create it with the result passed through
-            db.Article.create(result)
+            // Saves article in db
+            function createArticle () {
+                db.Article.create(result)
                 .then(function(dbArticle){
                     // Console.log the result
                     console.log("created: ");
@@ -61,7 +76,8 @@ app.get("/scrape", function(req, res){
                 .catch(function(err){
                     console.log(err);
                 });
-            });
+            }
+        });
             // Send a response that prints: `Scrape Complete`
             res.send("Scrape Complete");
     });
@@ -80,7 +96,6 @@ app.get("/articles", function(req, res){
     .catch(function(err){
         res.json(err);
     })
-
 })
 // ========== //
 // Route that grabs a specific Article by ID with the .get response 

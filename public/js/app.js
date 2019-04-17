@@ -25,6 +25,7 @@ function getAllArticlesCallback(response){
     }
     
 }
+// 
 
 function getArticles() {
     $.getJSON("/articles/", getAllArticlesCallback) // get all articles 
