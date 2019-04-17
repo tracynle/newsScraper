@@ -1,38 +1,37 @@
-// App.js will be used to append your data onto your page by using ajax calls
-// ============
-// use JSON to get your articles and append into the p tag with the `data`
-function getArticles(){
-  $.getJSON("/articles", function(data){
-      // use a for loop to get each article
-      for(var i = 0; i < data.length; i++) {
-          // display the article's id, title and link on the page
-          $("#articles").append("<p data-id= '" + data[i]._id + "' >" + data[i].title + "<br /><a href='" + data[i].link + "'>" + data[i].link + "</a></p>");
-      }
-  }) // get all articles 
-  $.ajax({
-   method: "GET",
-   url: "/articles"
- })
- .then(function(data){
-   console.log("Articles are scraped");
- })
-}
 // ============
 // When someone clicks on the p tag, the document will be ready when someone clicks on it. 
 // (Use the on click method)
-$(document).on("click", "p", function(){
-  // you want to empty the notes from the note section so older notes wouldn't be shown
-  $("#notes").empty();
-  // save `thisId` to `this` attr to the data-id from the p tag 
-  var thisId = $(this).attr("data-id");
-  // make an ajax call for the articles with the get method and at the url route and the thisId
-  $.ajax ({
-      method: "GET",
-      url: "/article/" + thisId
-      // return a promise with a function that has `data` as a callback
-  })
-  // Note section will be appended when p tag is clicked
-  .then(function(data) {
+$(document).on("click", "p", pTagOnClick);
+// ==============
+// When you click the savenote button
+$(document).on("click", "#savenote", saveNoteClickCallback);
+// ===============
+// Buttons that clears articles and notes
+$(document).on("click", "#clear-btn", clearClickCallback);
+// ===============
+// Scrape new articles 
+$(document).on("click", "#scrape-btn", scrapeButtonClickCallback);
+
+// App.js will be used to append your data onto your page by using ajax calls
+// ============
+// use JSON to get your articles and append into the p tag with the `data`
+
+function getAllArticlesCallback(response){
+    // use a for loop to get each article
+    for(var i = 0; i < response.length; i++) {
+        // display the article's id, title and link on the page
+        var article = response[i];
+        $("#articles").append("<p data-id= '" + article._id + "' >" + article.title + "<br /><a href='" + article.link + "'>" + article.link + "</a></p>");
+    }
+    
+}
+
+function getArticles() {
+    $.getJSON("/articles/", getAllArticlesCallback) // get all articles 
+}
+
+
+function getSingleArticleForNoteCallback(data) {
     console.log(data);
     // The title of the article
     $("#notes").append("<h2>" + data.title + "</h2>");
@@ -56,65 +55,67 @@ $(document).on("click", "p", function(){
       // Place the body of the note in the body textarea
       $("#bodyinput").val(data.note.body);
     }
-  });
-});
+  }
 
-// ==============
-// When you click the savenote button
-$(document).on("click", "#savenote", function() {
-  // Grab the id associated with the article from the submit button
-  var thisId = $(this).attr("data-id");
-
-  // Run a POST request to change the note, using what's entered in the inputs
-  $.ajax({
-    method: "POST",
-    url: "/articles/" + thisId,
-    data: {
-      // Value taken from title input
-      title: $("#titleinput").val(),
-      // Value taken from note textarea
-      body: $("#bodyinput").val()
-    }
-  })
-    // With that done
-    .then(function(response) {
-      // Log the response
-      console.log(response);
-      // Empty the notes section
-      $("#notes").empty();
-    });
-
-  // Also, remove the values entered in the input and textarea for note entry
-  $("#titleinput").val("");
-  $("#bodyinput").val("");
-});
-
-// ===============
-// Buttons that clears articles and notes
-$(document).on("click", "#clear-btn", function(){
-  $.ajax ({
-    method: "DELETE",
-    url: "/articles/"
-    // return a promise with a function that has `data` as a callback
-  })
-  .then(function(){
-    $("#articles").empty();
+function pTagOnClick(e) {
+    // you want to empty the notes from the note section so older notes wouldn't be shown
     $("#notes").empty();
-    console.log("Everything is cleared");
-  })
-})
-// ===============
-// Scrape new articles 
-$(document).on("click", "#scrape-btn", function(response){
-  $.ajax({
-    method: "GET",
-    url: "/scrape/"
-  })
-  .then(function(response){
-    console.log("New articles scraped");
+    // save `thisId` to `this` attr to the data-id from the p tag 
+    var thisId = $(this).attr("data-id");
+    // make an ajax call for the articles with the get method and at the url route and the thisId
+    // return a promise with a function that has `data` as a callback
+    var promise = $.ajax ({method: "GET", url: "/article/" + thisId});
 
-  })
-  getArticles();
+    // Note section will be appended when p tag is clicked
+    promise.then(getSingleArticleForNoteCallback);
+}
 
-})
+function saveNoteClickCallback(e) {
+    // Grab the id associated with the article from the submit button
+    var thisId = $(this).attr("data-id");
 
+    // Value taken from title input
+    // Value taken from note textarea
+    var dataMap = {title: $("#titleinput").val(), body: $("#bodyinput").val()};
+
+    // Run a POST request to change the note, using what's entered in the inputs
+    var promise = $.ajax({method: "POST", url: "/articles/" + thisId, data: dataMap});
+  
+    function saveNoteCallback(response) {
+        // Log the response
+        console.log(response);
+        // Empty the notes section
+        $("#notes").empty();
+    }
+
+      // With that done
+    promise.then(saveNoteCallback);
+  
+    // Also, remove the values entered in the input and textarea for note entry
+    $("#titleinput").val("");
+    $("#bodyinput").val("");
+}
+
+function clearClickCallback(e) {
+    // return a promise with a function that has `data` as a callback
+    var promise = $.ajax ({method: "DELETE",url: "/articles/"});
+
+    function articlesNotesClearedCallback(reponse){
+        $("#articles").empty();
+        $("#notes").empty();
+        console.log("Everything is cleared");
+    }
+
+    promise.then(articlesNotesClearedCallback);
+}
+
+function scrapeButtonClickCallback(e) {
+    var promise = $.ajax({method: "GET", url: "/scrape/"});
+
+    function scrapeCallback(response){
+        console.log("New articles scraped");
+        getArticles();
+    }
+
+    promise.then(scrapeCallback);
+}

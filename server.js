@@ -27,7 +27,7 @@ app.use(express.static("public"));
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 
 mongoose.connect(MONGODB_URI);
-console.log("This is it: zzzzz "+ MONGODB_URI);
+console.log("MONGODB_URI info: "+ MONGODB_URI);
 // Routes
 
 // A GET route for scraping the page
@@ -40,38 +40,32 @@ app.get("/scrape", function(req, res){
         // Then grab the html element where the article's tag is using the .each method 
         // that takes in function that include 2 parameters : `i` for iterate and element(refers to the current element from that iteration)
         $("article div.teaser-info > a").each(function(i, element) {
-            console.log("This is the Link's `i`:" + i);
-            console.log("This is the Link's` element: " + element);
             // save it as an empty result object which you will use later to append on the page 
             var result = {};
             // add the text and href of every link, and save them as properties of the result object
-            result.title = $(element)
+            result.title = $(this)
                 .children("h2")
                 .text();
-            console.log("this is the result: " + result.title);
-            result.link = $(element)
+            result.link = $(this)
                 .attr("href");
-                console.log("this is the link: " + result.link);
+                // console.log("this is the link: " + result.link);
             // Create a new Article using the `result` object you created earlier from scraping
             // Use mongoose db with collection name `Article` and create it with the result passed through
             db.Article.create(result)
-            .then(function(dbArticle){
-                // Console.log the result
-                console.log("created: ");
-                console.log(dbArticle);
-                console.log("This is the result: " + result)
-            })
-            // .catch the function if an error occurred, log it
-            .catch(function(err){
-                console.log(err);
+                .then(function(dbArticle){
+                    // Console.log the result
+                    console.log("created: ");
+                    console.log(dbArticle);
+                })
+                // .catch the function if an error occurred, log it
+                .catch(function(err){
+                    console.log(err);
+                });
             });
-        });
-        // Send a response that prints: `Scrape Complete`
-        res.send("Scrape Complete");
-        
+            // Send a response that prints: `Scrape Complete`
+            res.send("Scrape Complete");
     });
 });
-
 
 // ========== //
 // Route for all the articles you scraped from the db with the .GET route to `/articles`
@@ -117,12 +111,14 @@ app.post("/articles/:id", function(req, res){
         // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
         var updatedArticle = db.Article.findOneAndUpdate({_id: req.params.id}, { note: dbNote._id}, { new: true});
         res.json(updatedArticle);
+
         // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
     })
     // .catch, if an error occured, send the response back to the client in JSON format
     .catch(function(err){
         res.json(err);
     });
+
 });
 // ========== //
 // Route to DELETE one article by id
