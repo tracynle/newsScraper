@@ -1,7 +1,7 @@
 // ============
 // When someone clicks on the p tag, the document will be ready when someone clicks on it. 
 // (Use the on click method)
-$(document).on("click", "p", pTagOnClick);
+$(document).on("click", "h4", h4TagOnClick);
 // ==============
 // When you click the savenote button
 $(document).on("click", "#savenote", saveNoteClickCallback);
@@ -11,7 +11,18 @@ $(document).on("click", "#clear-btn", clearClickCallback);
 // ===============
 // Scrape new articles 
 $(document).on("click", "#scrape-btn", scrapeButtonClickCallback);
+// ===============
+// Saves articles 
+// $(document).on("click", "HTML ELEMENT HERE", NAMEOFCALLBACK);
 
+
+
+
+
+
+
+
+// ===============
 // App.js will be used to append your data onto your page by using ajax calls
 // ============
 // will get all articles and append html tags in the p tag
@@ -20,7 +31,17 @@ function getAllArticlesCallback(response){
     for(var i = 0; i < response.length; i++) {
         // display the article's id, title and link on the page
         var article = response[i];
-        $("#articles").append("<p data-id= '" + article._id + "' >" + article.title + "<br /><a href='" + article.link + "'>" + article.link + "</a></p>");
+        // $("#articles").append("<p data-id= '" + article._id + "' >" + article.title + "<br /><a href='" + article.link + "'>" + article.link + "</a></p>");
+
+    //card body for each article
+
+
+    $("#articles").append("<div class='card'><div class='card-header'><h4 data-id= '" + article._id + "' >" + article.title + "<br /><a href='" + article.link + "'>" + "</a></h4>");
+    $("#articles").append("<div class='card-body'><h5 class='card-title'><a href= ' " + article.link + " ' >Read Article</a></h5>");
+    // $("#articles").append("<h2 class='card-text'></h2><a href='/saved' class='btn btn-primary'>Save Article</a></div></div><br><br>");
+    // To append summary of article
+    $("#articles").append("<h2 class='card-text'>" + "TESTING SUMMARY: "+ article.summary + "</h2><a href='/saved' class='btn btn-primary'>Save Article</a></div></div><br><br>");
+
     }
     
 }
@@ -58,7 +79,7 @@ function getSingleArticleForNoteCallback(data) {
     console.log("This is the data.note:", data.note);
 };
 
-function pTagOnClick(e) {
+function h4TagOnClick(e) {
     // you want to empty the notes from the note section so older notes wouldn't be shown
     $("#notes").empty();
     // save `thisId` to `this` attr to the data-id from the p tag 

@@ -11,14 +11,7 @@ body {
   font-size: 70px;
   color: black;
 }
-#jumbotron-image {
-  background-image: url('/images/beverage-bread-breakfast-1928151.jpg');
-  opacity: 0.7;
-}
-.container-btns {
-  margin-left: auto;
-  margin-right: auto;
-}
+
 .container-nav-links {
   margin-left: auto;
   margin-right: auto;
@@ -54,12 +47,21 @@ textarea {
   height: 200px;
   font-size: 18px;
 }
+
+/* FOOTER */
 .container-footer {
   margin-left: auto;
   margin-right: auto;
   width: 960px;
   background-color: white;
   text-align: center;
+}
+
+
+/* BUTTONS */
+.container-btns {
+  margin-left: auto;
+  margin-right: auto;
 }
 #scrape-btn {
   margin-right: 15px;

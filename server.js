@@ -45,6 +45,7 @@ app.get("/scrape", function(req, res){
             // add the text and href of every link, and save them as properties of the result object
             result.title = $(this).children("h2").text();
             result.link = $(this).attr("href");
+            result.summary = $(this).children("p").text();
             
             // check for duplicates condition:
             db.Article.find({title: result.title})
@@ -104,7 +105,7 @@ app.get("/article/:id", function(req,res){
     // the object map would the request at its params and id 
     db.Article.findOne({ _id: req.params.id })
         // .populate the `note` 
-        .populate("notes")
+        .populate("note")
         // returns a promise with the `dbArticle` as a callback
         .then(function(dbArticle){
             // if the promise was successful, find an Article with the given id, send it back to the client with res.json (callback name)
@@ -187,6 +188,9 @@ app.delete("/articles", function(req, res){
         res.json(err);
     }); 
 })
+
+
+
 // ========== //
 // Start the server that listens to the port and log it.
 app.listen(PORT, function() {
