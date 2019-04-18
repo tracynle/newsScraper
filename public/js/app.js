@@ -33,6 +33,7 @@ function getArticles() {
 
 
 function getSingleArticleForNoteCallback(data) {
+   
     console.log(data);
     // The title of the article
     $("#notes").append("<h2>" + data.title + "</h2>");
@@ -50,12 +51,13 @@ function getSingleArticleForNoteCallback(data) {
     );
 
     // If there's a note in the article
-    if (data.note) {
+    if (data.notes) {
       // Place the title of the note in the title input
-      $("#titleinput").val(data.note.title);
+      $("#titleinput").val(data.notes.title);
       // Place the body of the note in the body textarea
-      $("#bodyinput").val(data.note.body);
+      $("#bodyinput").val(data.notes.body);
     }
+    console.log("This is the data.note:", data.notes);
   }
 
 function pTagOnClick(e) {
@@ -63,9 +65,13 @@ function pTagOnClick(e) {
     $("#notes").empty();
     // save `thisId` to `this` attr to the data-id from the p tag 
     var thisId = $(this).attr("data-id");
+    console.log("This is the thisId: ", thisId);
     // make an ajax call for the articles with the get method and at the url route and the thisId
     // return a promise with a function that has `data` as a callback
-    var promise = $.ajax ({method: "GET", url: "/article/" + thisId});
+    var promise = $.ajax ({
+        method: "GET", 
+        url: "/article/" + thisId
+    });
 
     // Note section will be appended when p tag is clicked
     promise.then(getSingleArticleForNoteCallback);
@@ -77,16 +83,25 @@ function saveNoteClickCallback(e) {
 
     // Value taken from title input
     // Value taken from note textarea
-    var dataMap = {title: $("#titleinput").val(), body: $("#bodyinput").val()};
+    var notesMap = {
+        title: $("#titleinput").val(), 
+        body: $("#bodyinput").val()
+    };
 
     // Run a POST request to change the note, using what's entered in the inputs
-    var promise = $.ajax({method: "POST", url: "/articles/" + thisId, data: dataMap});
-  
+    var promise = $.ajax({
+        method: "POST", 
+        url: "/articles/" + thisId, 
+        data: notesMap
+    });
+    console.log("This is the notesMap: ", notesMap);
+
     function saveNoteCallback(response) {
         // Log the response
-        console.log(response);
+        console.log("This is the saveNoteCallback response:", response);
         // Empty the notes section
         $("#notes").empty();
+
     }
 
       // With that done
