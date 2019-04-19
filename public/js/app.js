@@ -40,7 +40,7 @@ function getAllArticlesCallback(response){
     $("#articles").append("<div class='card-body'><h5 class='card-title'><a href= ' " + article.link + " ' >Read Article</a></h5>");
     // $("#articles").append("<h2 class='card-text'></h2><a href='/saved' class='btn btn-primary'>Save Article</a></div></div><br><br>");
     // To append summary of article
-    $("#articles").append("<h2 class='card-text'>" + "TESTING SUMMARY: "+ article.summary + "</h2><a href='/saved' class='btn btn-primary'>Save Article</a></div></div><br><br>");
+    $("#articles").append("<h2 class='card-text'>" + "TESTING SUMMARY:"+ article.summary + "</h2><a href='/saved' class='btn btn-primary'>Save Article</a></div></div><br><br>");
 
     }
     

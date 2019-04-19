@@ -14,25 +14,26 @@
 
     <body>
         <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <nav class="navbar navbar-expand-lg " id="bg-nav">
+                    <div class="container-nav-links">
+                        <ul class="nav nav-pills nav-fill">
+                            <li class="nav-item">
+                                <a href="/" class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item active">
+                                <a href="/saved" class="nav-link">Saved Articles</a>
+                            </li>
+                        </ul>
+                        </div>
                 <div class="container-btns">
                     <ul class="navbar-nav">
-                        <li class="btn btn-danger clear" id="scrape-btn">Scrape New Articles</li>
-                        <li class="btn btn-danger clear" id="clear-btn">Clear Articles</li>
+                        <li class="btn btn-outline-primary" id="scrape-btn">Scrape New Articles</li>
+                        <li class="btn btn-outline-danger" id="clear-btn">Clear Articles</li>
                     </ul>
                 </div>
-                <div class="container-nav-links">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a href="/" class="nav-link">Home</a>
-                        </li>
-                        <li class="nav-item active">
-                            <a href="/saved" class="nav-link">Saved Articles</a>
-                        </li>
-                    </ul>
-                </div>
+
             </nav>
-            <div class="jumbotron text-center" id="jumbotron-image">
+            <div class="jumbotron text-center" id="jumbotron-bg">
                 <div class="overlay">
                 </div>
                 <div class="background-image">
@@ -44,31 +45,23 @@
             </div>
         </div>
         <div class="container">
-            <div id="articles"></div>
-            <div id="notes"></div>
+            <div class="main-container">
+                <div class="section">
+                    <div id="articles"></div>
+                    <div id="notes"></div>
+                </div>
+                
+            </div>
         </div>
 <!-- 
-        <div class="card">
-            <h5 class="card-header"></h5>
-            <div class="card-body">
-              <h5 class="card-title" id="articles">
-
-              </h5>
-              <div class="card-text" id="notes">
-
-              </div>
-            </div>
-          </div> -->
-
-
         <div class="container-footer">
             <footer class="footer">
                 <div class="container">
-                    <p>ArtNet News Scraper</p>
+            
                 </div>
             </footer>    
 
-        </div>
+        </div> -->
 
                   
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
